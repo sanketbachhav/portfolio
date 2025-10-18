@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1" />
+      <title>Sanket Bachhav — App Developer</title>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+      <style>
+        /*
+          Theme system: CSS variables for colors.
+          Body has .theme-dark (default) or .theme-light to switch palettes.
+        */
+
+        :root{
+          --radius:14px;
+          --max-width:1100px;
+          /* animation */
+          --theme-transition: 220ms ease;
+        }
+
+        /* DARK theme (base) */
+        .theme-dark {
+          --bg: #0f1720;
+          --card: #0f1727;
+          --muted: #98a0ad;
+          --accent: #ffff7630; /* original orange accent */
+          --glass: rgba(255,255,255,0.03);
+          --text: #e6eef6;
+          --muted-2: rgba(255,255,255,0.7);
+        }
+
+        /* LIGHT theme */
+        .theme-light {
+          --bg: #f5f8fb; /* overall page background */
+          --card: #ffffff; /* card / panels */
+          --muted: #6b7280; /* muted text */
+          --accent: #1e90ff; /* blue accent (dodgerblue) */
+          --glass: rgba(2,6,23,0.03); /* subtle layer in light */
+          --text: #0b1220; /* primary text */
+          --muted-2: rgba(11,18,32,0.7);
+        }
+
+        /* base resets */
+        *{box-sizing:border-box}
+        html, body{
+          margin:0;
+          font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+          background:linear-gradient(180deg,var(--bg) 0%,var(--bg) 100%);
+          color:var(--text);
+          -webkit-font-smoothing:antialiased;
+          -moz-osx-font-smoothing:grayscale;
+          line-height:1.45;
+          scroll-behavior:smooth;
+          transition: background var(--theme-transition), color var(--theme-transition);
+        }
+
+        .wrap{max-width:var(--max-width);margin:36px auto;padding:22px;transition: color var(--theme-transition);}
+
+        /* HEADER */
+        header.site-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+        .brand{display:flex;gap:12px;align-items:center}
+        .logo{
+          width:56px;height:56px;border-radius:12px;
+          background:linear-gradient(135deg,var(--accent),rgba(255,186,107,0.95));
+          display:grid;place-items:center;font-weight:800;color:#052;box-shadow:0 6px 20px rgba(0,0,0,0.08);
+        }
+        .brand h1{font-size:18px;margin:0;font-weight:800;letter-spacing:0.2px;color:var(--accent)}
+        nav.main-nav{display:flex;gap:8px;align-items:center}
+        nav.main-nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600}
+        nav.main-nav a.active{background:rgba(0,0,0,0.04);color:var(--text)}
+        .controls-right{display:flex;gap:8px;align-items:center}
+        .lang-toggle, .theme-toggle{
+          margin-left:8px;padding:8px 10px;border-radius:10px;background:transparent;cursor:pointer;border:0;color:var(--muted);font-weight:700;
+          transition: background var(--theme-transition), color var(--theme-transition);
+        }
+        .theme-toggle:focus, .lang-toggle:focus{outline:3px solid rgba(0,0,0,0.06);outline-offset:4px;border-radius:8px;}
+
+/* We'll style SVGs inside logo */
+      .logo svg{width:42px;height:42px;display:block}
+      .logo .logo-light{opacity:0;transform:scale(.9);transition:opacity var(--theme-transition), transform var(--theme-transition)}
+      .logo .logo-dark{opacity:1;transform:scale(1);transition:opacity var(--theme-transition), transform var(--theme-transition)}
+
+/* when light theme active, swap visibility */
+      body.theme-light .logo { background: linear-gradient(135deg,var(--accent), rgba(30,144,255,0.12)); }
+      body.theme-light .logo-light{opacity:1;transform:scale(1)}
+      body.theme-light .logo-dark{opacity:0;transform:scale(.9)}
+
+      body.theme-dark .logo { background: linear-gradient(135deg,var(--accent), rgba(255,186,107,0.95)); }
+      body.theme-dark .logo-dark{opacity:1;transform:scale(1)}
+      body.theme-dark .logo-light{opacity:0;transform:scale(.9)}
+
+      .brand h1{font-size:18px;margin:0;font-weight:800;letter-spacing:0.2px;color:var(--accent)}
+      nav.main-nav{display:flex;gap:8px;align-items:center}
+      nav.main-nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600}
+      nav.main-nav a.active{background:rgba(0,0,0,0.04);color:var(--text)}
+      .controls-right{display:flex;gap:8px;align-items:center}
+      .lang-toggle, .theme-toggle{
+        margin-left:8px;padding:8px 10px;border-radius:10px;background:transparent;cursor:pointer;border:0;color:var(--muted);font-weight:700;
+        transition: background var(--theme-transition), color var(--theme-transition), transform 160ms;
+        display:inline-flex;align-items:center;gap:8px;
+      }
+      .theme-toggle{padding:8px;border-radius:999px;border:1px solid rgba(0,0,0,0.06);background:transparent}
+      .theme-toggle:active{transform:scale(.98)}
+      .theme-toggle:focus{outline:3px solid rgba(0,0,0,0.06);outline-offset:4px;border-radius:8px;}
+
+      /* Toggle icons crossfade */
+      .toggle-icons{position:relative;width:22px;height:22px;display:inline-block}
+      .toggle-icons svg{position:absolute;left:0;top:0;width:22px;height:22px;transition:opacity var(--theme-transition), transform var(--theme-transition)}
+      .toggle-icons .icon-sun{opacity:1; transform: rotate(0deg) scale(1)}
+      .toggle-icons .icon-moon{opacity:0; transform: rotate(-20deg) scale(.8)}
+      body.theme-light .toggle-icons .icon-sun{opacity:0; transform: rotate(20deg) scale(.8)}
+      body.theme-light .toggle-icons .icon-moon{opacity:1; transform: rotate(0deg) scale(1)}
+
+
+        /* HERO */
+        .hero{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:center;padding:22px;background:linear-gradient(180deg,rgba(0,0,0,0.02),transparent);border-radius:18px;box-shadow:0 10px 30px rgba(2,6,23,0.05);transition: box-shadow var(--theme-transition)}
+        .hero h2{font-size:32px;margin:0 0 8px;font-weight:800;color:var(--text)}
+        .hero p{margin:0;color:var(--muted);font-size: small;}
+        .cta-row{margin-top:14px;display:flex;gap:12px}
+        .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;font-weight:700;text-decoration:none;cursor:pointer;border:0}
+        .btn.primary{background:var(--accent);color: #02121b;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+        .btn.ghost{border:1px solid rgba(0,0,0,0.06);color:var(--muted);background:transparent}
+        .hero-card{border-radius:12px;overflow:hidden;height:220px;background:linear-gradient(135deg,rgba(0,0,0,0.03),rgba(0,0,0,0.02));display:flex;align-items:center;justify-content:center;color:var(--muted)}
+        .hero-card img{width:100%;height:100%;object-fit:cover;opacity:0.98}
+
+        /* sections */
+        section {margin-top:34px}
+        section h3{font-size:20px;margin:0 0 12px;color:var(--text)}
+
+        /* Skills */
+        .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+        .skill {background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);transition: background var(--theme-transition)}
+        .skill h4{margin:0 0 8px;font-size:14px;color:var(--text)}
+        .skill p{margin:0;color:var(--muted);font-size:13px}
+
+        /* Projects grid + flip cards */
+        .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+
+        /* Parent perspective - keep on .project for robust 3D */
+        .project { perspective: 1200px; -webkit-perspective: 1200px; }
+
+        .flip-card{
+          width:100%;
+          height:260px;
+          position:relative;
+          transform-style:preserve-3d;
+          transition:transform 0.6s;
+          border-radius:14px;
+          box-shadow:0 8px 30px rgba(2,6,23,0.08);
+          overflow:visible;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+          background:var(--card);
+          border:1px solid rgba(0,0,0,0.04);
+        }
+        .flip-card:focus{outline:3px solid rgba(0,0,0,0.06);outline-offset:4px}
+
+        /* Hover fallback + JS classes all target same transform */
+        .project:hover .flip-card,
+        .flip-card.hover,
+        .flip-card.flipped {
+          transform: rotateY(180deg);
+        }
+
+        .flip-front, .flip-back {
+          position:absolute;
+          inset:0;
+          border-radius:14px;
+          backface-visibility:hidden;
+          -webkit-backface-visibility:hidden;
+          overflow:hidden;
+          transform-style: preserve-3d;
+        }
+
+        .flip-front{background:var(--card);display:flex;flex-direction:column;justify-content:flex-end}
+        .proj-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.64)}
+        .proj-meta{position:relative;padding:14px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.12));z-index:2}
+        .proj-meta h4{margin:0 0 4px;color:var(--text)}
+        .proj-meta p{margin:0;color:var(--muted);font-size:13px}
+
+        .flip-back{background:linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.04));transform:rotateY(180deg);padding:18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px}
+        .tag{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.02)}
+        .proj-links{display:flex;gap:10px;margin-top:6px}
+        .proj-links a{padding:10px 12px;border-radius:10px;text-decoration:none;background:rgba(0,0,0,0.03);color:var(--muted);font-weight:700}
+        .proj-links a.github{background:linear-gradient(90deg,#222,#111);color:#fff}
+
+        /* Timeline */
+        .timeline-wrap{display:flex;gap:28px;align-items:flex-start}
+        .timeline-line{width:70px;display:flex;justify-content:center;position:relative}
+        .vline{position:relative;margin-top:12px;width:6px;background:linear-gradient(180deg,#2168ff,#6a32ff);border-radius:6px;height:80%}
+        .node{position:absolute;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#4ea1ff,#b26bff);box-shadow:0 6px 16px rgba(0,0,0,0.06)}
+        .timeline-cards{flex:1;display:flex;flex-direction:column;gap:18px}
+        .job-card{background:var(--card);padding:18px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);display:flex;gap:14px;align-items:flex-start}
+        .avatar{width:56px;height:56px;border-radius:12px;flex-shrink:0;background:linear-gradient(45deg,#24c0b6,#4ea1ff);display:grid;place-items:center;font-weight:800;color:#042}
+        .job-card h4{margin:0;font-size:16px;color:var(--text)}
+        .company{color:var(--muted);font-size:13px;margin-top:3px}
+        .job-meta{color:var(--muted);font-size:13px;margin-top:8px}
+
+        /* Contact */
+        .contact-grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+        .contact-form input,.contact-form textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:var(--card);color:var(--text)}
+        .contact-form button{margin-top:10px;padding:12px;border-radius:10px;border:0;background:var(--accent);color:#02121b;font-weight:800;cursor:pointer}
+
+        /* small utilities */
+        .toast{position:fixed;right:18px;bottom:18px;background:#062028;padding:10px 14px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);color:#bfe9ff;box-shadow:0 10px 30px rgba(0,0,0,0.06)}
+
+/* Lightbox features list */
+#lbFeatures li{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  padding:6px 8px;
+  border-radius:8px;
+  background:rgba(0,0,0,0.02);
+  color:var(--muted);
+  font-size:13px;
+}
+#lbFeatures li b{color:var(--text);font-weight:700;margin-right:6px}
+
+        /* focus visible for keyboard users */
+        :focus{outline:none}
+        :focus-visible{outline:3px solid rgba(0,0,0,0.06);outline-offset:3px;border-radius:8px}
+
+        /* reduced motion */
+        @media (prefers-reduced-motion: reduce){
+          .flip-card{transition:none}
+          .flip-card:hover{transform:none}
+        }
+
+        /* responsive */
+        @media (max-width:990px){
+          .hero{grid-template-columns:1fr}
+          .projects-grid{grid-template-columns:repeat(2,1fr)}
+          .skills-grid{grid-template-columns:repeat(2,1fr)}
+          .contact-grid{grid-template-columns:1fr}
+          .timeline-wrap{flex-direction:column}
+          .timeline-line{width:100%}
+        }
+        @media (max-width:620px){
+          .projects-grid{grid-template-columns:1fr}
+        }
+
+        /* Small UI nicety: theme icon spacing */
+        .theme-icon { width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px; }
+      </style>
+   </head>
+   <body>
+      <div class="wrap" id="pageWrap">
+         <header class="site-header" role="banner">
+            <div class="brand" aria-hidden="false">
+               <div class="logo" aria-hidden="true">SB</div>
+               <div>
+                  <h1 id="brandTitle">Sanket Bachhav — App Developer</h1>
+                  <div style="font-size:12px;color:var(--muted)" id="brandSubtitle">Full-stack: Mobile + Backend</div>
+               </div>
+            </div>
+            <nav class="main-nav" role="navigation" aria-label="Primary">
+              <a href="#about" data-key="nav_about">About</a>
+              <a href="#skills" data-key="nav_skills">Skills</a>
+              <a href="#projects" data-key="nav_projects">Projects</a>
+              <a href="#experience" data-key="nav_experience">Experience</a>
+              <a href="#contact" data-key="nav_contact">Contact</a>
+            </nav>
+
+            <div class="controls-right" role="group" aria-label="Page controls">
+              <button class="lang-toggle" id="langToggle" aria-pressed="false" title="Toggle language">DE</button>
+              <button class="theme-toggle" id="themeToggle" aria-pressed="false" title="Toggle theme">
+            <span class="toggle-icons" aria-hidden="true">
+              <!-- sun -->
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+              </svg>
+              <!-- moon -->
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" style="color:var(--accent)">
+                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+              </svg>
+            </span>
+            <span class="theme-label" id="themeLabel">Dark</span>
+          </button>
+            </div>
+         </header>
+
+         <!-- HERO / ABOUT -->
+         <section class="hero" id="about">
+            <div>
+               <h3 id="introTitle">I'm Sanket Bachhav. I build and deploy beautiful mobile apps with backend power.</h3>
+               <p id="introText">I’m a passionate Software Engineer with 3+ years of hands-on experience in mobile and backend development, specializing in building scalable, efficient, and user-focused applications. My expertise spans Flutter for cross-platform mobile apps and Spring Boot for robust backend systems. Throughout my career, I’ve worked across the full development lifecycle from designing and implementing features to deploying apps on the Play Store and App Store. I take pride in writing clean, maintainable code and delivering solutions that balance performance with great user experience.</p>
+               <div class="cta-row">
+                 <a class="btn primary" href="#projects" id="btnViewProjects"><i class="fa-solid fa-rocket"></i> <span data-key="cta_projects">View Projects</span></a>
+                 <a class="btn ghost" href="#contact"><i class="fa-solid fa-envelope"></i> <span data-key="cta_contact">Contact</span></a>
+                 <button class="btn ghost" onclick="downloadCV()" id="btnDownload"><i class="fa-solid fa-file"></i> <span data-key="cta_download">Download CV</span></button>
+               </div>
+               <div style="margin-top:14px;color:var(--muted);font-size:13px" id="metaLine">Location: Ingolstadt, Germany • Open to remote & on-site roles</div>
+            </div>
+            <div class="hero-card" aria-hidden="true">
+              <img loading="lazy" src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1400&q=80" alt="cover">
+            </div>
+         </section>
+
+         <!-- SKILLS -->
+         <section id="skills">
+            <h3 data-key="heading_skills">Skill showcase</h3>
+            <div class="skills-grid" id="skillsGrid">
+               <div class="skill">
+                  <h4>Frontend — Apps</h4>
+                  <p>Flutter, Dart, State Management(Bloc, MVVM), component-driven UI, animations.</p>
+               </div>
+               <div class="skill">
+                  <h4>Backend</h4>
+                  <p>Spring Boot, REST APIs, authentication.</p>
+               </div>
+               <div class="skill">
+                  <h4>Databases</h4>
+                  <p>SQLite (mobile), MySQL, query optimization and schema design.</p>
+               </div>
+               <div class="skill">
+                  <h4>Dev Tools</h4>
+                  <p>Git, GitHub, GitLab, SVN, Jira, Postman</p>
+               </div>
+               <div class="skill">
+                  <h4>Deployment & Release</h4>
+                  <p>App deployment on Play Store and App Store, release build management, signing, and versioning.</p>
+               </div>
+            </div>
+         </section>
+
+         <!-- PROJECTS -->
+         <section id="projects">
+            <h3 data-key="heading_projects">All projects</h3>
+            <div class="projects-grid" id="projectsGrid">
+
+               <!-- Project 1 -->
+               <div class="project">
+                  <div class="flip-card" tabindex="0" role="button" aria-pressed="false"
+                       data-photos="images/hms.png"
+                       data-features="Youtube Integration(In-App and normal), oAuth-authentication, Progress Tracker, Sqflite local DB, Adaptive quizzes, Spring Boot backend"
+                       aria-label="Project: HMS Vocabulary App">
+                     <div class="flip-front" aria-hidden="false">
+                        <img class="proj-cover" loading="lazy" src="images/hms.png" alt="HMS Vocabulary App — offline-first spaced repetition">
+                        <div class="proj-meta">
+                           <h4>HMS Vocabulary App</h4>
+                        </div>
+                     </div>
+                     <div class="flip-back" aria-hidden="true">
+                        <div style="text-align:center">
+                           <div style="font-weight:800">HMS Vocabulary App</div>
+                           <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Spring Boot • SQL</div>
+                           <div class="proj-links" style="margin-top:12px">
+                             <a class="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+                             <a href="#" class="preview-link">Preview</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Project 2 -->
+               <div class="project">
+                  <div class="flip-card" tabindex="0" role="button" aria-pressed="false"
+                       data-photos="images/food_delivery.png"
+                       data-features="Payment gateway integration, Google Map Implementation, Push Notification, Background Notification, Background Location Tracking, Real-time order tracking, Sqflite local DB, Spring Boot backend"
+                       aria-label="Project: Food Delivery App">
+                     <div class="flip-front">
+                        <img class="proj-cover" loading="lazy" src="images/food_delivery.png" alt="Food Delivery App — order tracking and offline caching">
+                        <div class="proj-meta">
+                           <h4>Food Delivery App</h4>
+                        </div>
+                     </div>
+                     <div class="flip-back">
+                        <div style="text-align:center">
+                           <div style="font-weight:800">Food Delivery App</div>
+                           <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Spring Boot • Sqflite</div>
+                           <div class="proj-links" style="margin-top:12px">
+                             <a class="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+                             <a href="#" class="preview-link">Preview</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Project 3 -->
+               <div class="project">
+                  <div class="flip-card" tabindex="0" role="button" aria-pressed="false"
+                       data-photos="images/fitness.jpg"
+                       data-features="Payment gateway integration, Push Notification, Background Notification, Background Location Tracking, Real-time order tracking, Sqflite local DB, Spring Boot backend"
+                       aria-label="Project: Fitness App">
+                     <div class="flip-front">
+                        <img class="proj-cover" loading="lazy" src="images/fitness.jpg" alt="Fitness App — workout tracking">
+                        <div class="proj-meta">
+                           <h4>Fitness App</h4>
+                        </div>
+                     </div>
+                     <div class="flip-back">
+                        <div style="text-align:center">
+                           <div style="font-weight:800">Fitness App</div>
+                           <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Firebase • Sqflite</div>
+                           <div class="proj-links" style="margin-top:12px">
+                             <a class="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+                             <a href="#" class="preview-link">Preview</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Project 4 -->
+               <div class="project">
+                  <div class="flip-card" tabindex="0" role="button" aria-pressed="false"
+                       data-photos="images/coffee_shop.png"
+                       data-features="Payment gateway integration, Push Notification, Background Notification, Sqflite local DB, Spring Boot backend"
+                       aria-label="Project: Coffee Shop App">
+                     <div class="flip-front" aria-hidden="false">
+                        <img class="proj-cover" loading="lazy" src="images/coffee_shop.png" alt="Coffee Shop App — ordering & notifications">
+                        <div class="proj-meta">
+                           <h4>Coffee Shop App</h4>
+                        </div>
+                     </div>
+                     <div class="flip-back" aria-hidden="true">
+                        <div style="text-align:center">
+                           <div style="font-weight:800">Coffee Shop App</div>
+                           <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Firebase</div>
+                           <div class="proj-links" style="margin-top:12px">
+                             <a class="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+                             <a href="#" class="preview-link">Preview</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Project 5 -->
+               <div class="project">
+                  <div class="flip-card" tabindex="0" role="button" aria-pressed="false"
+                       data-photos="images/travel.png"
+                       data-features="Push Notification, Background Notification, Sqflite local DB, Spring Boot backend, Chat Option"
+                       aria-label="Project: Travel App">
+                     <div class="flip-front">
+                        <img class="proj-cover" loading="lazy" src="images/travel.png" alt="Travel App cover — itinerary builder">
+                        <div class="proj-meta">
+                           <h4>Travel App</h4>
+                        </div>
+                     </div>
+                     <div class="flip-back">
+                        <div style="text-align:center">
+                           <div style="font-weight:800">Travel App</div>
+                           <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Spring Boot</div>
+                           <div class="proj-links" style="margin-top:12px">
+                             <a class="github" href="" target="_blank" rel="noopener noreferrer">GitHub</a>
+                             <a href="#" class="preview-link">Preview</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Project 6 -->
+               <div class="project">
+                  <div class="flip-card" tabindex="0" role="button" aria-pressed="false"
+                       data-photos="images/smartdoor.png"
+                       data-features="Push notification with dynamic ringtone, Native plugin coding for interaction with camera, Google maps integration for property searching, Razorpay integration for payments in flutter, 3rd party SDK integration to fetch documents to complete user KYC, Spring Boot backend, AI Chatbot integration"
+                       aria-label="Project: Smart Door">
+                     <div class="flip-front">
+                        <img class="proj-cover" loading="lazy" src="images/smartdoor.png" alt="Smart Door — secure BLE access">
+                        <div class="proj-meta">
+                           <h4>Smart Door</h4>
+                        </div>
+                     </div>
+                     <div class="flip-back">
+                        <div style="text-align:center">
+                           <div style="font-weight:800">Smart Door</div>
+                           <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Spring Boot</div>
+                           <div class="proj-links" style="margin-top:12px">
+                             <a class="github" href="" target="_blank" rel="noopener noreferrer">GitHub</a>
+                             <a href="#" class="preview-link">Preview</a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+            </div>
+         </section>
+
+         <!-- EXPERIENCE -->
+         <section id="experience">
+            <h3 data-key="heading_experience">Professional experience</h3>
+            <div class="timeline-wrap" id="timelineWrap">
+               <div class="timeline-line" aria-hidden="true">
+                  <div style="height:14px"></div>
+                  <div class="vline"></div>
+                  <div class="node" style="top:36px;"></div>
+                  <div class="node" style="top:170px;"></div>
+               </div>
+               <div class="timeline-cards">
+                  <div class="job-card" aria-label="Role: Software Engineer">
+                     <div class="avatar" aria-hidden="true">AE</div>
+                     <div>
+                        <h4>Software Engineer</h4>
+                        <div class="company">Aether Enterprise Applications LLP</div>
+                        <div class="job-meta">Dec 2022 — Oct 2025 • <span style="color:var(--accent);font-weight:700">2 years 11 months</span></div>
+                        <div style="margin-top:10px;color:var(--muted);font-size:14px"> Built and deploy cross-platform mobile apps, integrated Spring Boot and optimized SQLite sync, handle effective client communication and and lead the project and Led onboarding for four junior developers. </div>
+                     </div>
+                  </div>
+                  <div class="job-card" aria-label="Role: Intern">
+                     <div class="avatar" style="background:linear-gradient(45deg,#b26bff,#ff7aa4)" aria-hidden="true">PS</div>
+                     <div>
+                        <h4>Intern</h4>
+                        <div class="company">Persistent Systems Limited</div>
+                        <div class="job-meta">Feb 2022 — July 2022 • <span style="color:var(--accent);font-weight:700">6 months</span></div>
+                        <div style="margin-top:10px;color:var(--muted);font-size:14px"> I worked on Java-based backend development, where I contributed to building scalable and efficient backend solutions. During my tenure, I also underwent extensive training in Java and related backend technologies. </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         <!-- CONTACT -->
+         <section id="contact">
+            <h3 data-key="heading_contact">Contact me</h3>
+            <div class="contact-grid">
+               <!-- Netlify-ready form: data-netlify, hidden form-name, honeypot (bot-field) -->
+               <div class="contact-form" style="background:var(--card);padding:16px;border-radius:12px">
+                  <form id="contactForm"
+                        name="contact"
+                        method="POST"
+                        action="/"
+                        data-netlify="true"
+                        netlify-honeypot="bot-field"
+                        onsubmit="sendContact(event)">
+                    <!-- required hidden input for Netlify -->
+                    <input type="hidden" name="form-name" value="contact">
+                    <!-- honeypot field (automated bots will fill this) -->
+                    <input type="hidden" name="bot-field" id="bot-field" value="">
+                    <label style="font-weight:700;font-size:13px">Name</label>
+                    <input id="name" name="name" required placeholder="Your name">
+                    <label style="font-weight:700;font-size:13px;margin-top:8px;display:block">Email</label>
+                    <input id="email" name="email" type="email" required placeholder="you@example.com">
+                    <label style="font-weight:700;font-size:13px;margin-top:8px;display:block">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Brief description or project details"></textarea>
+                    <button type="submit">Send message</button>
+                  </form>
+               </div>
+
+               <div style="padding:16px;border-radius:12px;background:var(--glass);height:100%">
+                  <h4 style="margin-top:0">Quick contact</h4>
+                  <p style="color:var(--muted)">Email</p>
+                  <a href="mailto:sanketbachhav10@gmail.com" style="color:var(--accent);font-weight:700">sanketbachhav10@gmail.com</a>
+                  <p style="margin-top:12px;color:var(--muted)">Links</p>
+                  <div style="display:flex;gap:10px">
+                    <a href="https://github.com/sanketbachhav" style="color:var(--muted);text-decoration:underline" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="https://www.linkedin.com/in/sanket-bachhav-b2704b1ab/" style="color:var(--muted);text-decoration:underline" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                  </div>
+                  <div style="margin-top:18px;color:var(--muted)">
+                     <strong>Availability</strong>
+                     <div style="margin-top:6px">Open to remote work • Available for contract or full-time</div>
+                  </div>
+               </div>
+            </div>
+         </section>
+
+         <footer style="margin-top:28px;text-align:center;color:var(--muted);font-size:13px">
+           © <span id="year"></span> Sanket Bachhav — App Developer
+         </footer>
+      </div>
+
+      <!-- Lightbox modal -->
+      <div id="lightboxModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);z-index:9999;padding:18px" role="dialog" aria-modal="true" aria-label="Project gallery" aria-hidden="true">
+         <div style="max-width:1100px;width:100%;background:var(--card);padding:14px;border-radius:10px;position:relative;">
+            <button id="lbClose" aria-label="Close" style="position:absolute;right:12px;top:12px;background:transparent;border:0;color:var(--text);font-size:18px">✕</button>
+            <div style="display:flex;gap:12px;align-items:start;">
+               <div style="flex:1;display:grid;place-items:center;min-height:320px;position:relative;">
+                 <button id="lbPrev" aria-label="Previous image" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--text);font-size:22px">◀</button>
+                 <img id="lbImg" src="" alt="" style="width:100%;height:100%;max-height:600px;object-fit:cover;border-radius:8px;display:block" />
+                 <button id="lbNext" aria-label="Next image" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--text);font-size:22px">▶</button>
+               </div>
+
+               <!-- RIGHT COLUMN: title, key features, thumbs -->
+               <div style="width:260px;display:flex;flex-direction:column;gap:10px">
+                  <div id="lbTitle" style="font-weight:800;color:var(--text)"></div>
+
+                  <!-- Key features panel -->
+                  <div id="lbFeaturesWrap" style="background:var(--card);padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.04);">
+                    <div id="lbThumbs" style="display:grid;grid-template-columns:1fr 1fr;gap:6px"></div>
+                  </div>
+                  <div style="font-weight:800;margin-top:12px;color:var(--text)">Key features</div>
+                  <ul id="lbFeatures" style="margin:0;padding:0;list-style:none;display:grid;gap:6px;">
+                    <!-- populated dynamically -->
+                    <li style="color:var(--muted);font-size:13px">No feature list supplied.</li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div id="toast" class="toast" style="display:none"></div>
+
+      <script>
+        /* ------------------------------ Localization strings (English + German) ------------------------------ */
+        const STRINGS = {
+          en: {
+            nav_about: "About",
+            nav_skills: "Skills",
+            nav_projects: "Projects",
+            nav_experience: "Experience",
+            nav_contact: "Contact",
+            cta_projects: "View Projects",
+            cta_contact: "Contact",
+            cta_download: "Download CV",
+            heading_skills: "Skill showcase",
+            heading_projects: "All projects",
+            heading_experience: "Professional experience",
+            heading_contact: "Contact me",
+          },
+          de: {
+            nav_about: "Über mich",
+            nav_skills: "Fähigkeiten",
+            nav_projects: "Projekte",
+            nav_experience: "Berufserfahrung",
+            nav_contact: "Kontakt",
+            cta_projects: "Projekte anzeigen",
+            cta_contact: "Kontakt",
+            cta_download: "Lebenslauf herunterladen",
+            heading_skills: "Fähigkeiten",
+            heading_projects: "Alle Projekte",
+            heading_experience: "Berufserfahrung",
+            heading_contact: "Kontakt",
+          }
+        };
+        let lang = 'en';
+
+        // Apply localized text to elements with data-key attributes
+        function applyLanguage() {
+          document.querySelectorAll('[data-key]').forEach(el=>{
+            const key = el.getAttribute('data-key');
+            if(STRINGS[lang] && STRINGS[lang][key]) el.textContent = STRINGS[lang][key];
+          });
+          const toggle = document.getElementById('langToggle');
+          toggle.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+          toggle.textContent = lang === 'de' ? 'EN' : 'DE';
+        }
+        document.getElementById('langToggle').addEventListener('click', ()=>{
+          lang = (lang === 'en') ? 'de' : 'en';
+          applyLanguage();
+        });
+        applyLanguage();
+
+          /* ------------------------------ Theme handling (with animated toggle and logo swap) ------------------------------ */
+      const body = document.body;
+      const THEME_KEY = 'portfolio_theme'; // 'light' | 'dark'
+      const themeToggleBtn = document.getElementById('themeToggle');
+      const themeLabel = document.getElementById('themeLabel');
+
+      function applyTheme(theme) {
+        if(theme === 'light') {
+          body.classList.remove('theme-dark');
+          body.classList.add('theme-light');
+          themeToggleBtn.setAttribute('aria-pressed', 'true');
+          themeLabel.textContent = 'Light';
+        } else {
+          body.classList.remove('theme-light');
+          body.classList.add('theme-dark');
+          themeToggleBtn.setAttribute('aria-pressed', 'false');
+          themeLabel.textContent = 'Dark';
+        }
+      }
+
+      // init theme: localStorage > prefers-color-scheme > dark
+      (function initTheme() {
+        const saved = localStorage.getItem(THEME_KEY);
+        if(saved === 'light' || saved === 'dark') {
+          applyTheme(saved);
+        } else {
+          const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+          applyTheme(prefersLight ? 'light' : 'dark');
+        }
+      })();
+
+      themeToggleBtn.addEventListener('click', () => {
+        const activeIsLight = body.classList.contains('theme-light');
+        const next = activeIsLight ? 'dark' : 'light';
+        applyTheme(next);
+        localStorage.setItem(THEME_KEY, next);
+      });
+
+
+        /* ------------------------------ Small helpers & UI behaviors ------------------------------ */
+        document.getElementById('year').textContent = new Date().getFullYear();
+        function showToast(msg, t = 2500) {
+          const el = document.getElementById('toast');
+          el.textContent = msg;
+          el.style.display = 'block';
+          clearTimeout(el._t);
+          el._t = setTimeout(()=>el.style.display='none', t);
+        }
+        function downloadCV() {
+          const url = 'your-cv.pdf';
+          window.open(url, '_blank');
+          showToast(lang === 'de' ? 'Lebenslauf wird geöffnet...' : 'Opening CV...');
+        }
+
+        /* ------------------------------ Flip card keyboard accessibility & hover */
+        document.querySelectorAll('.flip-card').forEach(card=>{
+          // mouse enter/leave for hover flip (kept for pointer users)
+          card.addEventListener('mouseenter', ()=>{ card.classList.add('hover'); });
+          card.addEventListener('mouseleave', ()=>{ card.classList.remove('hover'); });
+
+          // keyboard: Enter/Space toggles flip and sets aria-pressed
+          card.addEventListener('keydown', (e)=>{
+            if(e.code === 'Enter' || e.code === 'Space') {
+              e.preventDefault();
+              const flipped = card.classList.toggle('flipped');
+              card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+            }
+          });
+
+          // clicking preview link inside flip should open gallery
+          const preview = card.querySelector('.preview-link');
+          if(preview) preview.addEventListener('click', (ev)=>{
+            ev.preventDefault();
+            openGalleryFromCard(card);
+          });
+
+          // ensure clicking the card toggles flip (but not when clicking links)
+          card.addEventListener('click', (ev)=>{
+            const isInteractive = ev.target.closest('a, button');
+            if (isInteractive) return;
+            const flipped = card.classList.toggle('flipped');
+            card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+          });
+        });
+
+        /* ------------------------------ Lightbox / Gallery improvements ------------------------------ */
+
+        // parse features helper (supports JSON array, comma-separated, or pipe-separated)
+        function parseFeatures(attr) {
+          if(!attr) return [];
+          attr = attr.trim();
+          try {
+            const maybe = JSON.parse(attr);
+            if(Array.isArray(maybe)) return maybe.map(s => String(s).trim()).filter(Boolean);
+          } catch(e){}
+          return attr.split(/\s*(?:\||,)\s*/).map(s => s.trim()).filter(Boolean);
+        }
+
+        let currentGallery = {photos:[], index:0, cardEl: null};
+        function openGalleryFromCard(card) {
+          // prefer data-photos; if missing, fall back to the first .proj-cover src
+          const photosAttr = card.getAttribute('data-photos') || '';
+          let photos = photosAttr.split(',').map(s=>s.trim()).filter(Boolean);
+
+          if(!photos.length) {
+            const cover = card.querySelector('.proj-cover');
+            if(cover && cover.src) photos = [cover.src];
+          }
+
+          if(!photos.length) return;
+          currentGallery.photos = photos;
+          currentGallery.index = 0;
+          currentGallery.cardEl = card;
+
+          document.getElementById('lbImg').src = photos[0];
+          document.getElementById('lbTitle').textContent = card.querySelector('.proj-meta h4')?.textContent || 'Project';
+          const thumbs = document.getElementById('lbThumbs');
+          thumbs.innerHTML = '';
+          photos.forEach((p,i)=>{
+            const img = document.createElement('img');
+            img.src = p;
+            img.loading = 'lazy';
+            img.style.width='100%';
+            img.style.height='70px';
+            img.style.objectFit='cover';
+            img.style.borderRadius='6px';
+            img.style.cursor='pointer';
+            img.tabIndex = 0;
+            img.alt = 'Thumbnail ' + (i+1);
+            img.addEventListener('click', () => { setGalleryIndex(i); });
+            img.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setGalleryIndex(i); } });
+            thumbs.appendChild(img);
+          });
+
+          // features: read from data-features
+          const featuresWrap = document.getElementById('lbFeatures');
+          featuresWrap.innerHTML = ''; // clear
+          const raw = card.getAttribute('data-features') || '';
+          const features = parseFeatures(raw);
+
+          if(features.length){
+            // SAFELY append text nodes (no innerHTML) to prevent XSS
+            features.forEach(f=>{
+              const li = document.createElement('li');
+              const bullet = document.createElement('span');
+              bullet.setAttribute('aria-hidden', 'true');
+              bullet.textContent = '•';
+              const textSpan = document.createElement('span');
+              textSpan.textContent = f; // safe assignment
+              li.appendChild(bullet);
+              li.appendChild(document.createTextNode(' '));
+              li.appendChild(textSpan);
+              featuresWrap.appendChild(li);
+            });
+          } else {
+            // fallback: use cover alt text or a helpful message
+            const cover = card.querySelector('.proj-cover');
+            const fallback = cover?.alt || (lang === 'de' ? 'Keine Funktionen verfügbar.' : 'No feature list supplied.');
+            const li = document.createElement('li');
+            li.textContent = fallback;
+            featuresWrap.appendChild(li);
+          }
+
+          // show modal and manage aria-hidden
+          const modal = document.getElementById('lightboxModal');
+          modal.style.display = 'flex';
+          modal.setAttribute('aria-hidden', 'false');
+          document.getElementById('lbClose').focus();
+        }
+
+        function setGalleryIndex(i){
+          const photos = currentGallery.photos;
+          if(!photos || !photos.length) return;
+          currentGallery.index = ((i % photos.length) + photos.length) % photos.length;
+          document.getElementById('lbImg').src = photos[currentGallery.index];
+        }
+
+        function closeLightbox(){
+          const modal = document.getElementById('lightboxModal');
+          modal.style.display = 'none';
+          modal.setAttribute('aria-hidden', 'true');
+          // return focus to the project card if possible
+          if(currentGallery.cardEl) currentGallery.cardEl.focus();
+        }
+
+        document.getElementById('lbClose').addEventListener('click', closeLightbox);
+        document.getElementById('lbPrev').addEventListener('click', ()=> { setGalleryIndex(currentGallery.index - 1); });
+        document.getElementById('lbNext').addEventListener('click', ()=> { setGalleryIndex(currentGallery.index + 1); });
+
+        // keyboard escape and arrows for lightbox
+        document.addEventListener('keydown', function(e){
+          const modalVisible = document.getElementById('lightboxModal').style.display === 'flex';
+          if(modalVisible){
+            if(e.key === 'Escape') closeLightbox();
+            if(e.key === 'ArrowLeft') { setGalleryIndex(currentGallery.index - 1); }
+            if(e.key === 'ArrowRight') { setGalleryIndex(currentGallery.index + 1); }
+          }
+        });
+
+        /* ------------------------------ Active nav highlight while scrolling ------------------------------ */
+        const navLinks = Array.from(document.querySelectorAll('nav.main-nav a'));
+        const sections = navLinks.map(a => document.getElementById(a.getAttribute('href').slice(1)));
+        function onScrollActive() {
+          const y = window.scrollY + 120; // offset for header
+          let activeIndex = 0;
+          sections.forEach((sec, i) => { if(sec && sec.offsetTop <= y) activeIndex = i; });
+          navLinks.forEach((a,i) => a.classList.toggle('active', i === activeIndex));
+        }
+        window.addEventListener('scroll', onScrollActive);
+        onScrollActive();
+
+        /* ------------------------------ Netlify form submission (AJAX) ------------------------------ */
+        // This will submit the form to Netlify without page reload.
+        // Netlify will capture the submission (make sure to deploy to Netlify).
+        async function sendContact(e){
+          e.preventDefault();
+          const form = document.getElementById('contactForm');
+
+          // basic bot-field check (honeypot): if filled, silently abort
+          const bot = form.querySelector('input[name="bot-field"]')?.value;
+          if(bot) { return; }
+
+          const name = document.getElementById('name').value.trim();
+          const email = document.getElementById('email').value.trim();
+          const message = document.getElementById('message').value.trim();
+
+          // Compose the body as x-www-form-urlencoded for Netlify
+          const encode = (data) => {
+            return Object.keys(data)
+              .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+              .join("&");
+          };
+
+          const body = encode({
+            "form-name": form.getAttribute('name') || 'contact',
+            name,
+            email,
+            message
+          });
+
+          try {
+            const resp = await fetch("/", {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body
+            });
+
+            if (resp.ok) {
+              showToast(lang === 'de' ? 'Nachricht gesendet — danke!' : 'Message sent — thanks!');
+              form.reset();
+            } else {
+              // Netlify sometimes returns 200 on success; handle non-ok as error
+              showToast(lang === 'de' ? 'Fehler beim Senden. Bitte versuchen Sie es erneut.' : 'Failed to send — please try again.');
+            }
+          } catch (err) {
+            console.error('Netlify form submit error:', err);
+            showToast(lang === 'de' ? 'Fehler beim Senden. Bitte versuchen Sie es erneut.' : 'Failed to send — please try again.');
+          }
+        }
+
+        /* Accessibility: ensure all preview links have keyboard handlers (useful if content is dynamically added later) */
+        document.addEventListener('click', function(e) { if(e.target.matches('.preview-link')) e.preventDefault(); });
+
+        /* Allow flip-card toggling with a quick double-tap on mobile */
+        let lastTap = 0;
+        document.addEventListener('touchend', function (e) {
+          const t = Date.now();
+          if (t - lastTap < 300) {
+            const card = e.target.closest('.flip-card');
+            if(card) {
+              const flipped = card.classList.toggle('flipped');
+              card.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+            }
+          }
+          lastTap = t;
+        });
+
+        /* --- Smooth scrolling for all internal links (header-aware) --- */
+        (function(){
+          const header = document.querySelector('.site-header');
+          function headerHeight(){ return header ? header.getBoundingClientRect().height : 0; }
+          function smoothTo(hash){
+            if(!hash || hash === '#' || hash === '#!') return;
+            const id = hash.replace('#','');
+            const target = document.getElementById(id);
+            if(!target) return;
+            const lb = document.getElementById('lightboxModal');
+            if(lb && lb.style.display === 'flex') return;
+            const scrollTop = window.scrollY || window.pageYOffset;
+            const rect = target.getBoundingClientRect();
+            const offset = headerHeight() + 12;
+            const top = Math.max(0, Math.floor(scrollTop + rect.top - offset));
+            window.scrollTo({ top, behavior: 'smooth' });
+            try { history.pushState(null, '', '#' + id); } catch(e) {}
+          }
+          document.addEventListener('click', function(e){
+            const a = e.target.closest('a[href^="#"]');
+            if(!a) return;
+            const href = a.getAttribute('href');
+            if(!href || href === '#' || href === '#!') return;
+            e.preventDefault();
+            smoothTo(href);
+          });
+          document.querySelectorAll('[data-scroll]').forEach(btn=>{
+            btn.addEventListener('click', function(ev){
+              ev.preventDefault();
+              smoothTo(btn.getAttribute('data-scroll'));
+            });
+          });
+          let sd;
+          window.addEventListener('scroll', function(){
+            clearTimeout(sd);
+            sd = setTimeout(()=>{ if(typeof onScrollActive === 'function') onScrollActive(); }, 80);
+          });
+        })();
+      </script>
+   </body>
+</html>
