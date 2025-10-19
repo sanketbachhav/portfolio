@@ -2,21 +2,23 @@
 <html lang="en">
    <head>
       <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width,initial-scale=1" />
+      <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
       <title>Sanket Bachhav — App Developer</title>
+      <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>">
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
       <style>
         /*
-          Theme system: CSS variables for colors.
-          Body has .theme-dark (default) or .theme-light to switch palettes.
+          Responsive-friendly adjustments added.
+          - On mobile (<760px) the navigation and hamburger are hidden so users scroll the page to navigate.
+          - All original body content kept; only CSS rules adjusted for mobile behavior.
         */
 
         :root{
           --radius:14px;
           --max-width:1100px;
-          /* animation */
           --theme-transition: 220ms ease;
+          --tap-size:44px; /* minimum recommended touch target */
         }
 
         /* DARK theme (base) */
@@ -24,7 +26,7 @@
           --bg: #0f1720;
           --card: #0f1727;
           --muted: #98a0ad;
-          --accent: #ffff7630; /* original orange accent */
+          --accent: #ffff7630;
           --glass: rgba(255,255,255,0.03);
           --text: #e6eef6;
           --muted-2: rgba(255,255,255,0.7);
@@ -32,12 +34,12 @@
 
         /* LIGHT theme */
         .theme-light {
-          --bg: #f5f8fb; /* overall page background */
-          --card: #ffffff; /* card / panels */
-          --muted: #6b7280; /* muted text */
-          --accent: #1e90ff; /* blue accent (dodgerblue) */
-          --glass: rgba(2,6,23,0.03); /* subtle layer in light */
-          --text: #0b1220; /* primary text */
+          --bg: #f5f8fb;
+          --card: #ffffff;
+          --muted: #6b7280;
+          --accent: #1e90ff;
+          --glass: rgba(2,6,23,0.03);
+          --text: #0b1220;
           --muted-2: rgba(11,18,32,0.7);
         }
 
@@ -55,56 +57,49 @@
           transition: background var(--theme-transition), color var(--theme-transition);
         }
 
-        .wrap{max-width:var(--max-width);margin:36px auto;padding:22px;transition: color var(--theme-transition);}
+        .wrap{max-width:var(--max-width);margin:20px auto;padding:18px;transition: color var(--theme-transition);}
 
-        /* HEADER */
-        header.site-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+        /* HEADER - responsive */
+        header.site-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
         .brand{display:flex;gap:12px;align-items:center}
         .logo{
-          width:56px;height:56px;border-radius:12px;
+          width:48px;height:48px;border-radius:12px;
           background:linear-gradient(135deg,var(--accent),rgba(255,186,107,0.95));
           display:grid;place-items:center;font-weight:800;color:#052;box-shadow:0 6px 20px rgba(0,0,0,0.08);
+          flex-shrink:0;
         }
-        .brand h1{font-size:18px;margin:0;font-weight:800;letter-spacing:0.2px;color:var(--accent)}
+        .brand h1{font-size:16px;margin:0;font-weight:800;letter-spacing:0.2px;color:var(--accent)}
         nav.main-nav{display:flex;gap:8px;align-items:center}
-        nav.main-nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600}
+        nav.main-nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600;white-space:nowrap}
         nav.main-nav a.active{background:rgba(0,0,0,0.04);color:var(--text)}
         .controls-right{display:flex;gap:8px;align-items:center}
         .lang-toggle, .theme-toggle{
           margin-left:8px;padding:8px 10px;border-radius:10px;background:transparent;cursor:pointer;border:0;color:var(--muted);font-weight:700;
           transition: background var(--theme-transition), color var(--theme-transition);
         }
-        .theme-toggle:focus, .lang-toggle:focus{outline:3px solid rgba(0,0,0,0.06);outline-offset:4px;border-radius:8px;}
+        .theme-toggle:focus, .lang-toggle:focus{outline:3px solid rgba(0,0,0,0.06);outline-offset:4px;border-radius:8px}
 
-/* We'll style SVGs inside logo */
+/* Toggle icons crossfade */
       .logo svg{width:42px;height:42px;display:block}
       .logo .logo-light{opacity:0;transform:scale(.9);transition:opacity var(--theme-transition), transform var(--theme-transition)}
       .logo .logo-dark{opacity:1;transform:scale(1);transition:opacity var(--theme-transition), transform var(--theme-transition)}
-
-/* when light theme active, swap visibility */
       body.theme-light .logo { background: linear-gradient(135deg,var(--accent), rgba(30,144,255,0.12)); }
       body.theme-light .logo-light{opacity:1;transform:scale(1)}
-      body.theme-light .logo-dark{opacity:0;transform:scale(.9)}
-
       body.theme-dark .logo { background: linear-gradient(135deg,var(--accent), rgba(255,186,107,0.95)); }
       body.theme-dark .logo-dark{opacity:1;transform:scale(1)}
       body.theme-dark .logo-light{opacity:0;transform:scale(.9)}
 
-      .brand h1{font-size:18px;margin:0;font-weight:800;letter-spacing:0.2px;color:var(--accent)}
-      nav.main-nav{display:flex;gap:8px;align-items:center}
-      nav.main-nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600}
-      nav.main-nav a.active{background:rgba(0,0,0,0.04);color:var(--text)}
+      .brand h1{font-size:16px;margin:0;font-weight:800;letter-spacing:0.2px;color:var(--accent)}
       .controls-right{display:flex;gap:8px;align-items:center}
       .lang-toggle, .theme-toggle{
-        margin-left:8px;padding:8px 10px;border-radius:10px;background:transparent;cursor:pointer;border:0;color:var(--muted);font-weight:700;
+        margin-left:8px;padding:8px;border-radius:999px;border:0;background:transparent;cursor:pointer;color:var(--muted);font-weight:700;
         transition: background var(--theme-transition), color var(--theme-transition), transform 160ms;
         display:inline-flex;align-items:center;gap:8px;
       }
-      .theme-toggle{padding:8px;border-radius:999px;border:1px solid rgba(0,0,0,0.06);background:transparent}
+      .theme-toggle{padding:8px;border-radius:999px;background:transparent}
       .theme-toggle:active{transform:scale(.98)}
       .theme-toggle:focus{outline:3px solid rgba(0,0,0,0.06);outline-offset:4px;border-radius:8px;}
 
-      /* Toggle icons crossfade */
       .toggle-icons{position:relative;width:22px;height:22px;display:inline-block}
       .toggle-icons svg{position:absolute;left:0;top:0;width:22px;height:22px;transition:opacity var(--theme-transition), transform var(--theme-transition)}
       .toggle-icons .icon-sun{opacity:1; transform: rotate(0deg) scale(1)}
@@ -114,10 +109,10 @@
 
 
         /* HERO */
-        .hero{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:center;padding:22px;background:linear-gradient(180deg,rgba(0,0,0,0.02),transparent);border-radius:18px;box-shadow:0 10px 30px rgba(2,6,23,0.05);transition: box-shadow var(--theme-transition)}
-        .hero h2{font-size:32px;margin:0 0 8px;font-weight:800;color:var(--text)}
-        .hero p{margin:0;color:var(--muted);font-size: small;}
-        .cta-row{margin-top:14px;display:flex;gap:12px}
+        .hero{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:center;padding:18px;background:linear-gradient(180deg,rgba(0,0,0,0.02),transparent);border-radius:18px;box-shadow:0 10px 30px rgba(2,6,23,0.05);transition: box-shadow var(--theme-transition)}
+        .hero h2{font-size:28px;margin:0 0 8px;font-weight:800;color:var(--text)}
+        .hero p{margin:0;color:var(--muted);font-size:14px;}
+        .cta-row{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
         .btn{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;font-weight:700;text-decoration:none;cursor:pointer;border:0}
         .btn.primary{background:var(--accent);color: #02121b;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
         .btn.ghost{border:1px solid rgba(0,0,0,0.06);color:var(--muted);background:transparent}
@@ -125,13 +120,13 @@
         .hero-card img{width:100%;height:100%;object-fit:cover;opacity:0.98}
 
         /* sections */
-        section {margin-top:34px}
-        section h3{font-size:20px;margin:0 0 12px;color:var(--text)}
+        section {margin-top:28px}
+        section h3{font-size:18px;margin:0 0 12px;color:var(--text)}
 
         /* Skills */
         .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-        .skill {background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);transition: background var(--theme-transition)}
-        .skill h4{margin:0 0 8px;font-size:14px;color:var(--text)}
+        .skill {background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);transition: background var(--theme-transition)}
+        .skill h4{margin:0 0 6px;font-size:14px;color:var(--text)}
         .skill p{margin:0;color:var(--muted);font-size:13px}
 
         /* Projects grid + flip cards */
@@ -175,23 +170,23 @@
 
         .flip-front{background:var(--card);display:flex;flex-direction:column;justify-content:flex-end}
         .proj-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.64)}
-        .proj-meta{position:relative;padding:14px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.12));z-index:2}
+        .proj-meta{position:relative;padding:12px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.12));z-index:2}
         .proj-meta h4{margin:0 0 4px;color:var(--text)}
         .proj-meta p{margin:0;color:var(--muted);font-size:13px}
 
-        .flip-back{background:linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.04));transform:rotateY(180deg);padding:18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px}
+        .flip-back{background:linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.04));transform:rotateY(180deg);padding:14px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px}
         .tag{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.02)}
-        .proj-links{display:flex;gap:10px;margin-top:6px}
-        .proj-links a{padding:10px 12px;border-radius:10px;text-decoration:none;background:rgba(0,0,0,0.03);color:var(--muted);font-weight:700}
+        .proj-links{display:flex;gap:8px;margin-top:6px}
+        .proj-links a{padding:8px 10px;border-radius:10px;text-decoration:none;background:rgba(0,0,0,0.03);color:var(--muted);font-weight:700}
         .proj-links a.github{background:linear-gradient(90deg,#222,#111);color:#fff}
 
         /* Timeline */
-        .timeline-wrap{display:flex;gap:28px;align-items:flex-start}
+        .timeline-wrap{display:flex;gap:24px;align-items:flex-start}
         .timeline-line{width:70px;display:flex;justify-content:center;position:relative}
         .vline{position:relative;margin-top:12px;width:6px;background:linear-gradient(180deg,#2168ff,#6a32ff);border-radius:6px;height:80%}
         .node{position:absolute;left:50%;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#4ea1ff,#b26bff);box-shadow:0 6px 16px rgba(0,0,0,0.06)}
-        .timeline-cards{flex:1;display:flex;flex-direction:column;gap:18px}
-        .job-card{background:var(--card);padding:18px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);display:flex;gap:14px;align-items:flex-start}
+        .timeline-cards{flex:1;display:flex;flex-direction:column;gap:16px}
+        .job-card{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,0.04);display:flex;gap:12px;align-items:flex-start}
         .avatar{width:56px;height:56px;border-radius:12px;flex-shrink:0;background:linear-gradient(45deg,#24c0b6,#4ea1ff);display:grid;place-items:center;font-weight:800;color:#042}
         .job-card h4{margin:0;font-size:16px;color:var(--text)}
         .company{color:var(--muted);font-size:13px;margin-top:3px}
@@ -205,7 +200,6 @@
         /* small utilities */
         .toast{position:fixed;right:18px;bottom:18px;background:#062028;padding:10px 14px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);color:#bfe9ff;box-shadow:0 10px 30px rgba(0,0,0,0.06)}
 
-/* Lightbox features list */
 #lbFeatures li{
   display:flex;
   align-items:flex-start;
@@ -218,50 +212,149 @@
 }
 #lbFeatures li b{color:var(--text);font-weight:700;margin-right:6px}
 
-        /* focus visible for keyboard users */
-        :focus{outline:none}
-        :focus-visible{outline:3px solid rgba(0,0,0,0.06);outline-offset:3px;border-radius:8px}
+/* focus visible for keyboard users */
+:focus{outline:none}
+:focus-visible{outline:3px solid rgba(0,0,0,0.06);outline-offset:3px;border-radius:8px}
 
-        /* reduced motion */
-        @media (prefers-reduced-motion: reduce){
-          .flip-card{transition:none}
-          .flip-card:hover{transform:none}
-        }
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .flip-card{transition:none}
+  .flip-card:hover{transform:none}
+}
 
-        /* responsive */
-        @media (max-width:990px){
-          .hero{grid-template-columns:1fr}
-          .projects-grid{grid-template-columns:repeat(2,1fr)}
-          .skills-grid{grid-template-columns:repeat(2,1fr)}
-          .contact-grid{grid-template-columns:1fr}
-          .timeline-wrap{flex-direction:column}
-          .timeline-line{width:100%}
-        }
-        @media (max-width:620px){
-          .projects-grid{grid-template-columns:1fr}
-        }
+/* ----------------- MOBILE / SMALL SCREEN ADJUSTMENTS ----------------- */
+@media (max-width:990px){
+  .hero{grid-template-columns:1fr;gap:12px}
+  .projects-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .skills-grid{grid-template-columns:repeat(2,1fr)}
+  .contact-grid{grid-template-columns:1fr}
+  .timeline-wrap{flex-direction:column}
+  .timeline-line{width:100%}
+  .wrap{padding:14px;margin:16px auto}
+  header.site-header{gap:10px}
+}
 
-        /* Small UI nicety: theme icon spacing */
-        .theme-icon { width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px; }
+/* NAV collapse for mobile
+   User requested: on mobile DO NOT show any menu option — user will scroll to bottom by themselves.
+   So hide both the hamburger (.nav-toggle) and the nav on small screens.
+*/
+.nav-toggle {
+  display:none;
+  width:var(--tap-size);
+  height:var(--tap-size);
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:transparent;
+  border:0;
+  color:var(--muted);
+}
+@media (max-width:760px){
+  .nav-toggle{ display:none !important; }  /* hide hamburger */
+  nav.main-nav{ display:none !important; } /* hide nav links entirely on mobile */
+  .brand h1{font-size:15px}
+  .logo{width:44px;height:44px}
+  .controls-right{gap:6px}
+}
+
+/* Hide hero image on very narrow screens for cleaner experience (image remains in DOM) */
+@media (max-width:480px){
+  .hero-card{display:none}
+}
+
+/* Smaller devices */
+@media (max-width:620px){
+  .projects-grid{grid-template-columns:1fr;gap:12px}
+  .flip-card{height:200px;border-radius:12px}
+  .hero-card{height:160px}
+  .hero h2{font-size:22px}
+  .skill h4{font-size:13px}
+  .contact-grid{grid-template-columns:1fr}
+  .timeline-wrap{gap:12px}
+  .job-card{padding:12px}
+  .avatar{width:48px;height:48px}
+  .cta-row{gap:8px}
+  .btn{padding:10px 12px}
+  .wrap{margin:12px auto;padding:12px}
+}
+
+/* Very small phones - tighten spacing further */
+@media (max-width:420px){
+  header.site-header{align-items:flex-start}
+  .brand{gap:10px}
+  .brand h1{font-size:14px}
+  .logo{width:40px;height:40px}
+  .hero p{font-size:13px}
+  .flip-card{height:180px}
+  .proj-meta{padding:10px}
+  .proj-links a{padding:8px}
+  .nav-toggle{width:40px;height:40px}
+}
+
+@media (max-width: 760px) {
+  .contact-form button {
+    padding: 10px 12px !important;
+    font-size: 14px;
+  }
+}
+/* Lightbox full-screen on mobile */
+#lightboxModal { transition: opacity 220ms ease; }
+@media (max-width:760px){
+  #lightboxModal { padding:8px; }
+  #lightboxModal > div { width:100%; max-width:100%; height:100vh; border-radius:10px; display:flex; flex-direction:column; }
+  #lightboxModal .right-col { width:100%; padding:10px; order:2; overflow:auto; max-height:45vh; }
+  #lbImg { max-height:55vh; object-fit:contain; border-radius:8px; }
+  #lbThumbs img { height:56px; }
+  #lbPrev, #lbNext { font-size:26px; top:50%; transform:translateY(-50%); }
+}
+
+/* Mobile: remove timeline vertical line & circles for a cleaner layout */
+@media (max-width: 1024px) {
+  .timeline-line .vline,
+  .timeline-line .node {
+    display: none !important;
+  }
+
+  /* Make sure the timeline cards take full width when markers are hidden */
+  .timeline-wrap { flex-direction: column; gap: 12px; }
+  .timeline-line { width: 100%; display: block; height: 0; }
+  .timeline-cards { width: 100%; }
+  .job-card { margin-left: 0; }
+}
+
+
+/* Ensure minimum hit target for interactive elements */
+button, .btn, a { min-height: var(--tap-size); line-height: var(--tap-size); }
+
+/* Small UI nicety: theme icon spacing */
+.theme-icon { width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px; }
       </style>
    </head>
    <body>
       <div class="wrap" id="pageWrap">
          <header class="site-header" role="banner">
-            <div class="brand" aria-hidden="false">
+            <div class="brand" aria-hidden="false" style="display:flex;align-items:center">
                <div class="logo" aria-hidden="true">SB</div>
-               <div>
+               <div style="display:flex;flex-direction:column;min-width:0">
                   <h1 id="brandTitle">Sanket Bachhav — App Developer</h1>
-                  <div style="font-size:12px;color:var(--muted)" id="brandSubtitle">Full-stack: Mobile + Backend</div>
+                  <div style="font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="brandSubtitle">Full-stack: Mobile + Backend</div>
                </div>
             </div>
-            <nav class="main-nav" role="navigation" aria-label="Primary">
-              <a href="#about" data-key="nav_about">About</a>
-              <a href="#skills" data-key="nav_skills">Skills</a>
-              <a href="#projects" data-key="nav_projects">Projects</a>
-              <a href="#experience" data-key="nav_experience">Experience</a>
-              <a href="#contact" data-key="nav_contact">Contact</a>
-            </nav>
+
+            <!-- Mobile nav toggle (hidden on mobile per your request) -->
+            <div style="display:flex;align-items:center;gap:8px">
+              <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mainNav" title="Open navigation" aria-label="Open navigation">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+
+              <nav id="mainNav" class="main-nav" role="navigation" aria-label="Primary" data-visible="true">
+                <a href="#about" data-key="nav_about">About</a>
+                <a href="#skills" data-key="nav_skills">Skills</a>
+                <a href="#projects" data-key="nav_projects">Projects</a>
+                <a href="#experience" data-key="nav_experience">Experience</a>
+                <a href="#contact" data-key="nav_contact">Contact</a>
+              </nav>
+            </div>
 
             <div class="controls-right" role="group" aria-label="Page controls">
               <button class="lang-toggle" id="langToggle" aria-pressed="false" title="Toggle language">DE</button>
@@ -292,7 +385,7 @@
                  <a class="btn ghost" href="#contact"><i class="fa-solid fa-envelope"></i> <span data-key="cta_contact">Contact</span></a>
                  <button class="btn ghost" onclick="downloadCV()" id="btnDownload"><i class="fa-solid fa-file"></i> <span data-key="cta_download">Download CV</span></button>
                </div>
-               <div style="margin-top:14px;color:var(--muted);font-size:13px" id="metaLine">Location: Ingolstadt, Germany • Open to remote & on-site roles</div>
+               <div style="margin-top:10px;color:var(--muted);font-size:13px" id="metaLine">Location: Ingolstadt, Germany • Open to remote & on-site roles</div>
             </div>
             <div class="hero-card" aria-hidden="true">
               <img loading="lazy" src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1400&q=80" alt="cover">
@@ -347,7 +440,7 @@
                         <div style="text-align:center">
                            <div style="font-weight:800">HMS Vocabulary App</div>
                            <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Spring Boot • SQL</div>
-                           <div class="proj-links" style="margin-top:12px">
+                           <div class="proj-links" style="margin-top:8px">
                              <a class="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
                              <a href="#" class="preview-link">Preview</a>
                            </div>
@@ -372,7 +465,7 @@
                         <div style="text-align:center">
                            <div style="font-weight:800">Food Delivery App</div>
                            <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Spring Boot • Sqflite</div>
-                           <div class="proj-links" style="margin-top:12px">
+                           <div class="proj-links" style="margin-top:8px">
                              <a class="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
                              <a href="#" class="preview-link">Preview</a>
                            </div>
@@ -397,7 +490,7 @@
                         <div style="text-align:center">
                            <div style="font-weight:800">Fitness App</div>
                            <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Firebase • Sqflite</div>
-                           <div class="proj-links" style="margin-top:12px">
+                           <div class="proj-links" style="margin-top:8px">
                              <a class="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
                              <a href="#" class="preview-link">Preview</a>
                            </div>
@@ -422,7 +515,7 @@
                         <div style="text-align:center">
                            <div style="font-weight:800">Coffee Shop App</div>
                            <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Firebase</div>
-                           <div class="proj-links" style="margin-top:12px">
+                           <div class="proj-links" style="margin-top:8px">
                              <a class="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
                              <a href="#" class="preview-link">Preview</a>
                            </div>
@@ -447,7 +540,7 @@
                         <div style="text-align:center">
                            <div style="font-weight:800">Travel App</div>
                            <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Spring Boot</div>
-                           <div class="proj-links" style="margin-top:12px">
+                           <div class="proj-links" style="margin-top:8px">
                              <a class="github" href="" target="_blank" rel="noopener noreferrer">GitHub</a>
                              <a href="#" class="preview-link">Preview</a>
                            </div>
@@ -460,7 +553,7 @@
                <div class="project">
                   <div class="flip-card" tabindex="0" role="button" aria-pressed="false"
                        data-photos="images/smartdoor.png"
-                       data-features="Push notification with dynamic ringtone, Native plugin coding for interaction with camera, Google maps integration for property searching, Razorpay integration for payments in flutter, 3rd party SDK integration to fetch documents to complete user KYC, Spring Boot backend, AI Chatbot integration"
+                       data-features="Push notification with dynamic ringtone, Native plugin coding for interaction with camera, Google maps integration for property searching, Razorpay integration for payments in flutter, 3rd party SDK integration to fetch documents to complete user KYC, Spring Boot backend, AI Chatbot integration"
                        aria-label="Project: Smart Door">
                      <div class="flip-front">
                         <img class="proj-cover" loading="lazy" src="images/smartdoor.png" alt="Smart Door — secure BLE access">
@@ -472,7 +565,7 @@
                         <div style="text-align:center">
                            <div style="font-weight:800">Smart Door</div>
                            <div style="color:var(--muted);font-size:13px;margin-top:6px">Flutter • Spring Boot</div>
-                           <div class="proj-links" style="margin-top:12px">
+                           <div class="proj-links" style="margin-top:8px">
                              <a class="github" href="" target="_blank" rel="noopener noreferrer">GitHub</a>
                              <a href="#" class="preview-link">Preview</a>
                            </div>
@@ -501,7 +594,7 @@
                         <h4>Software Engineer</h4>
                         <div class="company">Aether Enterprise Applications LLP</div>
                         <div class="job-meta">Dec 2022 — Oct 2025 • <span style="color:var(--accent);font-weight:700">2 years 11 months</span></div>
-                        <div style="margin-top:10px;color:var(--muted);font-size:14px"> Built and deploy cross-platform mobile apps, integrated Spring Boot and optimized SQLite sync, handle effective client communication and and lead the project and Led onboarding for four junior developers. </div>
+                        <div style="margin-top:8px;color:var(--muted);font-size:14px"> Built and deploy cross-platform mobile apps, integrated Spring Boot and optimized SQLite sync, handle effective client communication and and lead the project and Led onboarding for four junior developers. </div>
                      </div>
                   </div>
                   <div class="job-card" aria-label="Role: Intern">
@@ -510,7 +603,7 @@
                         <h4>Intern</h4>
                         <div class="company">Persistent Systems Limited</div>
                         <div class="job-meta">Feb 2022 — July 2022 • <span style="color:var(--accent);font-weight:700">6 months</span></div>
-                        <div style="margin-top:10px;color:var(--muted);font-size:14px"> I worked on Java-based backend development, where I contributed to building scalable and efficient backend solutions. During my tenure, I also underwent extensive training in Java and related backend technologies. </div>
+                        <div style="margin-top:8px;color:var(--muted);font-size:14px"> I worked on Java-based backend development, where I contributed to building scalable and efficient backend solutions. During my tenure, I also underwent extensive training in Java and related backend technologies. </div>
                      </div>
                   </div>
                </div>
@@ -521,8 +614,7 @@
          <section id="contact">
             <h3 data-key="heading_contact">Contact me</h3>
             <div class="contact-grid">
-               <!-- Netlify-ready form: data-netlify, hidden form-name, honeypot (bot-field) -->
-               <div class="contact-form" style="background:var(--card);padding:16px;border-radius:12px">
+               <div class="contact-form" style="background:var(--card);padding:14px;border-radius:12px">
                   <form id="contactForm"
                         name="contact"
                         method="POST"
@@ -530,9 +622,7 @@
                         data-netlify="true"
                         netlify-honeypot="bot-field"
                         onsubmit="sendContact(event)">
-                    <!-- required hidden input for Netlify -->
                     <input type="hidden" name="form-name" value="contact">
-                    <!-- honeypot field (automated bots will fill this) -->
                     <input type="hidden" name="bot-field" id="bot-field" value="">
                     <label style="font-weight:700;font-size:13px">Name</label>
                     <input id="name" name="name" required placeholder="Your name">
@@ -544,16 +634,16 @@
                   </form>
                </div>
 
-               <div style="padding:16px;border-radius:12px;background:var(--glass);height:100%">
+               <div style="padding:14px;border-radius:12px;background:var(--glass);height:100%">
                   <h4 style="margin-top:0">Quick contact</h4>
                   <p style="color:var(--muted)">Email</p>
                   <a href="mailto:sanketbachhav10@gmail.com" style="color:var(--accent);font-weight:700">sanketbachhav10@gmail.com</a>
                   <p style="margin-top:12px;color:var(--muted)">Links</p>
-                  <div style="display:flex;gap:10px">
+                  <div style="display:flex;gap:10px;flex-wrap:wrap">
                     <a href="https://github.com/sanketbachhav" style="color:var(--muted);text-decoration:underline" target="_blank" rel="noopener noreferrer">GitHub</a>
                     <a href="https://www.linkedin.com/in/sanket-bachhav-b2704b1ab/" style="color:var(--muted);text-decoration:underline" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                   </div>
-                  <div style="margin-top:18px;color:var(--muted)">
+                  <div style="margin-top:12px;color:var(--muted)">
                      <strong>Availability</strong>
                      <div style="margin-top:6px">Open to remote work • Available for contract or full-time</div>
                   </div>
@@ -561,36 +651,33 @@
             </div>
          </section>
 
-         <footer style="margin-top:28px;text-align:center;color:var(--muted);font-size:13px">
+         <footer style="margin-top:20px;text-align:center;color:var(--muted);font-size:13px">
            © <span id="year"></span> Sanket Bachhav — App Developer
          </footer>
       </div>
 
       <!-- Lightbox modal -->
       <div id="lightboxModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);z-index:9999;padding:18px" role="dialog" aria-modal="true" aria-label="Project gallery" aria-hidden="true">
-         <div style="max-width:1100px;width:100%;background:var(--card);padding:14px;border-radius:10px;position:relative;">
+         <div style="max-width:1100px;width:100%;background:var(--card);padding:14px;border-radius:10px;position:relative;display:flex;gap:12px;">
             <button id="lbClose" aria-label="Close" style="position:absolute;right:12px;top:12px;background:transparent;border:0;color:var(--text);font-size:18px">✕</button>
-            <div style="display:flex;gap:12px;align-items:start;">
-               <div style="flex:1;display:grid;place-items:center;min-height:320px;position:relative;">
+            <div style="flex:1;display:grid;place-items:center;min-height:320px;position:relative;">
                  <button id="lbPrev" aria-label="Previous image" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--text);font-size:22px">◀</button>
                  <img id="lbImg" src="" alt="" style="width:100%;height:100%;max-height:600px;object-fit:cover;border-radius:8px;display:block" />
                  <button id="lbNext" aria-label="Next image" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:transparent;border:0;color:var(--text);font-size:22px">▶</button>
-               </div>
+            </div>
 
-               <!-- RIGHT COLUMN: title, key features, thumbs -->
-               <div style="width:260px;display:flex;flex-direction:column;gap:10px">
-                  <div id="lbTitle" style="font-weight:800;color:var(--text)"></div>
+            <!-- RIGHT COLUMN: title, key features, thumbs -->
+            <div class="right-col" style="width:260px;display:flex;flex-direction:column;gap:10px">
+               <div id="lbTitle" style="font-weight:800;color:var(--text)"></div>
 
-                  <!-- Key features panel -->
-                  <div id="lbFeaturesWrap" style="background:var(--card);padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.04);">
-                    <div id="lbThumbs" style="display:grid;grid-template-columns:1fr 1fr;gap:6px"></div>
-                  </div>
-                  <div style="font-weight:800;margin-top:12px;color:var(--text)">Key features</div>
-                  <ul id="lbFeatures" style="margin:0;padding:0;list-style:none;display:grid;gap:6px;">
-                    <!-- populated dynamically -->
-                    <li style="color:var(--muted);font-size:13px">No feature list supplied.</li>
-                  </ul>
+               <!-- Key features panel -->
+               <div id="lbFeaturesWrap" style="background:var(--card);padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.04);">
+                 <div id="lbThumbs" style="display:grid;grid-template-columns:1fr 1fr;gap:6px"></div>
                </div>
+               <div style="font-weight:800;margin-top:12px;color:var(--text)">Key features</div>
+               <ul id="lbFeatures" style="margin:0;padding:0;list-style:none;display:grid;gap:6px;">
+                 <li style="color:var(--muted);font-size:13px">No feature list supplied.</li>
+               </ul>
             </div>
          </div>
       </div>
@@ -788,21 +875,19 @@
           const features = parseFeatures(raw);
 
           if(features.length){
-            // SAFELY append text nodes (no innerHTML) to prevent XSS
             features.forEach(f=>{
               const li = document.createElement('li');
               const bullet = document.createElement('span');
               bullet.setAttribute('aria-hidden', 'true');
               bullet.textContent = '•';
               const textSpan = document.createElement('span');
-              textSpan.textContent = f; // safe assignment
+              textSpan.textContent = f;
               li.appendChild(bullet);
               li.appendChild(document.createTextNode(' '));
               li.appendChild(textSpan);
               featuresWrap.appendChild(li);
             });
           } else {
-            // fallback: use cover alt text or a helpful message
             const cover = card.querySelector('.proj-cover');
             const fallback = cover?.alt || (lang === 'de' ? 'Keine Funktionen verfügbar.' : 'No feature list supplied.');
             const li = document.createElement('li');
@@ -814,6 +899,8 @@
           const modal = document.getElementById('lightboxModal');
           modal.style.display = 'flex';
           modal.setAttribute('aria-hidden', 'false');
+
+          // trap focus: move focus to close button
           document.getElementById('lbClose').focus();
         }
 
@@ -859,13 +946,10 @@
         onScrollActive();
 
         /* ------------------------------ Netlify form submission (AJAX) ------------------------------ */
-        // This will submit the form to Netlify without page reload.
-        // Netlify will capture the submission (make sure to deploy to Netlify).
         async function sendContact(e){
           e.preventDefault();
           const form = document.getElementById('contactForm');
 
-          // basic bot-field check (honeypot): if filled, silently abort
           const bot = form.querySelector('input[name="bot-field"]')?.value;
           if(bot) { return; }
 
@@ -873,7 +957,6 @@
           const email = document.getElementById('email').value.trim();
           const message = document.getElementById('message').value.trim();
 
-          // Compose the body as x-www-form-urlencoded for Netlify
           const encode = (data) => {
             return Object.keys(data)
               .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
@@ -898,7 +981,6 @@
               showToast(lang === 'de' ? 'Nachricht gesendet — danke!' : 'Message sent — thanks!');
               form.reset();
             } else {
-              // Netlify sometimes returns 200 on success; handle non-ok as error
               showToast(lang === 'de' ? 'Fehler beim Senden. Bitte versuchen Sie es erneut.' : 'Failed to send — please try again.');
             }
           } catch (err) {
@@ -962,6 +1044,11 @@
             sd = setTimeout(()=>{ if(typeof onScrollActive === 'function') onScrollActive(); }, 80);
           });
         })();
+
+        /* Note: nav toggle / drawer logic intentionally omitted because on mobile (<=760px)
+           nav and toggle are hidden per your request so users scroll the page manually.
+        */
+
       </script>
    </body>
 </html>
