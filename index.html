@@ -462,6 +462,10 @@
   .extra-details li { font-size:14px }
 }
 
+.job-card[tabindex] { cursor: pointer; }
+.job-card:focus-visible { outline: 3px solid rgba(0,0,0,0.06); outline-offset: 3px; border-radius: 12px; }
+
+
 
 /* Ensure minimum hit target for interactive elements */
 button, .btn, a { min-height: var(--tap-size); line-height: var(--tap-size); }
@@ -1259,6 +1263,30 @@ button, .btn, a { min-height: var(--tap-size); line-height: var(--tap-size); }
               // allow keyboard focusing headerClickable if it's not focusable
               if (!headerClickable.hasAttribute('tabindex')) headerClickable.setAttribute('tabindex', '0');
             }
+
+            // --- make the whole card tappable / keyboard-activatable ---
+            /* ensure card itself is focusable and has pointer cursor */
+            card.setAttribute('tabindex', '0');
+            card.style.cursor = 'pointer';
+
+            /* click on card toggles expand unless user clicked an interactive element */
+            card.addEventListener('click', (e) => {
+              // don't toggle if clicking links, buttons, inputs, or the details button itself
+              if ( e.target.closest('a, button, input, textarea, select') ) return;
+              // allow clicking avatar/header area or anywhere else to toggle
+              setExpanded(!card.classList.contains('expanded'));
+            });
+
+            /* keyboard: Enter / Space should toggle the card */
+            card.addEventListener('keydown', (e) => {
+              const key = e.key || e.keyIdentifier || e.which;
+              if (key === 'Enter' || key === ' ' || key === 'Spacebar' || key === 13 || key === 32) {
+                // avoid toggling when focus is inside a form control
+                if (document.activeElement && ['INPUT','TEXTAREA','SELECT','BUTTON','A'].includes(document.activeElement.tagName)) return;
+                e.preventDefault();
+                setExpanded(!card.classList.contains('expanded'));
+              }
+            });
 
             // close on escape when expanded
             document.addEventListener('keydown', (e) => {
