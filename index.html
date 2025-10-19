@@ -322,6 +322,146 @@
   .job-card { margin-left: 0; }
 }
 
+/* Expand/collapse for job cards (non-invasive) */
+.job-card { position: relative; overflow: visible; }
+
+/* small caret toggle placed top-right of the card */
+.job-card .details-toggle {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform 220ms ease, color 220ms ease;
+}
+.job-card .details-toggle:focus { outline: none; box-shadow: 0 0 0 3px rgba(0,0,0,0.06) }
+
+/* hidden details area */
+.extra-details {
+  margin: 12px 0 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 320ms ease, opacity 220ms ease, margin 220ms ease;
+  border-top: 1px solid rgba(255,255,255,0.02);
+  padding-top: 12px;
+  gap: 10px;
+  display: grid;
+}
+
+/* visible when expanded */
+.job-card.expanded .extra-details {
+  max-height: 900px; /* large enough for many items */
+  opacity: 1;
+  margin-top: 12px;
+}
+
+/* detail list item style (keeps your look) */
+.extra-details li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--muted-2);
+  font-size: 15px;
+  line-height: 1.45;
+  padding-right: 12px;
+}
+
+/* bullet icon */
+.extra-details li::before {
+  content: "✔";
+  display: inline-block;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: var(--accent);
+  font-weight: 700;
+  margin-top: 2px;
+  opacity: 0.95;
+  transform: translateY(0);
+  text-align:center;
+  font-size:12px;
+}
+
+/* container for items */
+.timeline-list {
+  display: grid;
+  gap: 16px;
+}
+
+/* each row contains left column (marker) + right column (card) */
+.timeline-item {
+  display: grid;
+  grid-template-columns: 70px 1fr; /* left column width matches previous timeline-line width */
+  gap: 12px;
+  align-items: start;
+}
+
+/* draw vertical line down the marker column */
+.timeline-item::before {
+  content: "";
+  grid-column: 1 / 2;
+  grid-row: 1 / -1;
+  justify-self: center;
+  width: 6px;
+  background: linear-gradient(180deg,#2168ff,#6a32ff);
+  border-radius: 6px;
+  height: 100%;
+  opacity: 1;
+  position: relative;
+  z-index: 0;
+}
+
+/* marker (circular dot) that sits centered next to each card */
+.timeline-item .marker {
+  grid-column: 1 / 2;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#4ea1ff,#b26bff);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+  justify-self: center;
+  margin-top: 26px;
+  z-index: 2; /* above the line */
+}
+
+/* place the job-card in the second column unchanged */
+.timeline-item .job-card {
+  grid-column: 2 / 3;
+  margin-left: 0; /* ensure no left offset */
+}
+
+/* responsive behavior: hide the left column / line on small screens (same as you had) */
+@media (max-width: 1024px) {
+  /* collapse to single column so markers/line are hidden on smaller devices */
+  .timeline-item {
+    grid-template-columns: 1fr;
+  }
+  .timeline-item::before { display: none; } /* no vertical line */
+  .timeline-item .marker { display: none; }  /* hide markers */
+  .timeline-item .job-card { grid-column: 1 / -1; }
+}
+
+
+/* rotate caret on expand */
+.job-card.expanded .details-toggle .caret { transform: rotate(180deg); }
+
+/* keep responsive: reduce spacing on small devices */
+@media (max-width: 620px) {
+  .job-card .details-toggle { right: 10px; top: 10px; width:34px; height:34px; font-size:16px; }
+  .extra-details li { font-size:14px }
+}
+
 
 /* Ensure minimum hit target for interactive elements */
 button, .btn, a { min-height: var(--tap-size); line-height: var(--tap-size); }
@@ -578,35 +718,57 @@ button, .btn, a { min-height: var(--tap-size); line-height: var(--tap-size); }
          </section>
 
          <!-- EXPERIENCE -->
+
+         
          <section id="experience">
             <h3 data-key="heading_experience">Professional experience</h3>
+
             <div class="timeline-wrap" id="timelineWrap">
-               <div class="timeline-line" aria-hidden="true">
-                  <div style="height:14px"></div>
-                  <div class="vline"></div>
-                  <div class="node" style="top:36px;"></div>
-                  <div class="node" style="top:170px;"></div>
-               </div>
-               <div class="timeline-cards">
+              <div class="timeline-list">
+                <div class="timeline-item">
+                  <div class="marker" aria-hidden="true"></div>
                   <div class="job-card" aria-label="Role: Software Engineer">
                      <div class="avatar" aria-hidden="true">AE</div>
                      <div>
                         <h4>Software Engineer</h4>
                         <div class="company">Aether Enterprise Applications LLP</div>
                         <div class="job-meta">Dec 2022 — Oct 2025 • <span style="color:var(--accent);font-weight:700">2 years 11 months</span></div>
-                        <div style="margin-top:8px;color:var(--muted);font-size:14px"> Built and deploy cross-platform mobile apps, integrated Spring Boot and optimized SQLite sync, handle effective client communication and and lead the project and Led onboarding for four junior developers. </div>
-                     </div>
+                        <!-- <div style="margin-top:8px;color:var(--muted);font-size:14px"> Built and deploy cross-platform mobile apps, integrated Spring Boot and optimized SQLite sync, handle effective client communication and and lead the project and Led onboarding for four junior developers. </div> -->
+                         <!-- put this inside a .job-card (after the main description div) if you want bullets) -->
+                        <ul class="extra-details" aria-hidden="true">
+                          <li>Developed an Auto-Logout function after a set period of inactivity for banking applications specialized for Accounting of Law Firms.</li>
+                          <li>Researched and selected the best React package for data visualization and implemented a complete data viz app.</li>
+                          <li>Upgraded front-end stack from React 16 to React 18 across multiple modules.</li>
+                           <li>Developed an Auto-Logout function after a set period of inactivity for banking applications specialized for Accounting of Law Firms.</li>
+                          <li>Researched and selected the best React package for data visualization and implemented a complete data viz app.</li>
+                          <li>Upgraded front-end stack from React 16 to React 18 across multiple modules.</li>
+                          <!-- add more <li> lines as needed -->
+                        </ul>
+                      </div>                   
                   </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="marker" aria-hidden="true"></div>
                   <div class="job-card" aria-label="Role: Intern">
                      <div class="avatar" style="background:linear-gradient(45deg,#b26bff,#ff7aa4)" aria-hidden="true">PS</div>
                      <div>
                         <h4>Intern</h4>
                         <div class="company">Persistent Systems Limited</div>
                         <div class="job-meta">Feb 2022 — July 2022 • <span style="color:var(--accent);font-weight:700">6 months</span></div>
-                        <div style="margin-top:8px;color:var(--muted);font-size:14px"> I worked on Java-based backend development, where I contributed to building scalable and efficient backend solutions. During my tenure, I also underwent extensive training in Java and related backend technologies. </div>
-                     </div>
+                        <!-- <div style="margin-top:8px;color:var(--muted);font-size:14px"> I worked on Java-based backend development, where I contributed to building scalable and efficient backend solutions. During my tenure, I also underwent extensive training in Java and related backend technologies. </div> -->
+                        <ul class="extra-details" aria-hidden="true">
+                          <li>Developed an Auto-Logout function after a set period of inactivity for banking applications specialized for Accounting of Law Firms.</li>
+                          <li>Researched and selected the best React package for data visualization and implemented a complete data viz app.</li>
+                          <li>Upgraded front-end stack from React 16 to React 18 across multiple modules.</li>
+                          <!-- add more <li> lines as needed -->
+                        </ul>
+                      </div>
                   </div>
-               </div>
+                </div>
+
+                <!-- add more .timeline-item blocks for each job-card -->
+              </div>
             </div>
          </section>
 
@@ -1044,6 +1206,71 @@ button, .btn, a { min-height: var(--tap-size); line-height: var(--tap-size); }
             sd = setTimeout(()=>{ if(typeof onScrollActive === 'function') onScrollActive(); }, 80);
           });
         })();
+
+        /* ---------- Expandable experience details (non-invasive) ---------- */
+        (function(){
+          // find each job-card that contains .extra-details
+          document.querySelectorAll('.job-card').forEach(card => {
+            const details = card.querySelector('.extra-details');
+            if (!details) return; // nothing to expand here
+
+            // create toggle button (caret) and insert to card
+            const btn = document.createElement('button');
+            btn.className = 'details-toggle';
+            btn.type = 'button';
+            btn.setAttribute('aria-expanded', 'false');
+            btn.setAttribute('aria-label', 'Show more details');
+            btn.innerHTML = '<span class="caret">▾</span>'; // caret glyph
+            // insert at top-right - append to .job-card (CSS positions it)
+            card.appendChild(btn);
+
+            // keyboard + click handlers
+            function setExpanded(exp) {
+              card.classList.toggle('expanded', !!exp);
+              btn.setAttribute('aria-expanded', !!exp ? 'true' : 'false');
+              btn.setAttribute('aria-label', !!exp ? 'Hide details' : 'Show more details');
+            }
+
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              setExpanded(!card.classList.contains('expanded'));
+            });
+
+            btn.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault(); e.stopPropagation();
+                setExpanded(!card.classList.contains('expanded'));
+              }
+            });
+
+            // also allow clicking the whole card header area: toggle when user clicks the header h4 or job-meta
+            const headerClickable = card.querySelector('h4, .job-meta');
+            if (headerClickable) {
+              headerClickable.style.cursor = 'pointer';
+              headerClickable.addEventListener('click', () => {
+                setExpanded(!card.classList.contains('expanded'));
+              });
+              headerClickable.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                  e.preventDefault();
+                  setExpanded(!card.classList.contains('expanded'));
+                }
+              });
+              // allow keyboard focusing headerClickable if it's not focusable
+              if (!headerClickable.hasAttribute('tabindex')) headerClickable.setAttribute('tabindex', '0');
+            }
+
+            // close on escape when expanded
+            document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape' && card.classList.contains('expanded')) {
+                setExpanded(false);
+                // return focus to toggle
+                btn.focus();
+              }
+            });
+          });
+        })();
+
 
         /* Note: nav toggle / drawer logic intentionally omitted because on mobile (<=760px)
            nav and toggle are hidden per your request so users scroll the page manually.
