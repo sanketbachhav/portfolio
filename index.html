@@ -948,11 +948,32 @@ button, .btn, a { min-height: var(--tap-size); line-height: var(--tap-size); }
           clearTimeout(el._t);
           el._t = setTimeout(()=>el.style.display='none', t);
         }
-        function downloadCV() {
-          const url = 'your-cv.pdf';
-          window.open(url, '_blank');
-          showToast(lang === 'de' ? 'Lebenslauf wird geöffnet...' : 'Opening CV...');
+
+        async function downloadCV() {
+          const filename = 'Sanket_Bachhav_CV.pdf'; // update if you renamed file
+          try {
+            showToast(lang === 'de' ? 'Lebenslauf wird heruntergeladen...' : 'Downloading CV...');
+            const resp = await fetch('/' + encodeURIComponent(filename));
+            if (!resp.ok) throw new Error('Network response was not OK');
+
+            const blob = await resp.blob();
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+
+            URL.revokeObjectURL(url);
+            showToast(lang === 'de' ? 'Fertig — Lebenslauf heruntergeladen' : 'Done — CV downloaded');
+          } catch (err) {
+            console.error('Download error:', err);
+            showToast(lang === 'de' ? 'Fehler beim Herunterladen' : 'Download failed');
+          }
         }
+
 
         /* ------------------------------ Flip card keyboard accessibility & hover */
         document.querySelectorAll('.flip-card').forEach(card=>{
